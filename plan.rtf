@@ -1,0 +1,88 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;\red0\green0\blue0;
+\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c0\c1\c1;\cssrgb\c100000\c100000\c99985\c0;\cssrgb\c0\c0\c0;
+\cssrgb\c100000\c100000\c100000\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww14840\viewh20120\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Chromos\
+	w.e	=  weight.closeness of agent\
+	w.a	=  weight.attitutude towards that agent  \
+	w.f	=  weight.closeness of food\
+	w.w	=  weight.closeness of wall\
+	w.c	=  weight.consume food\
+\cf2 \cb3 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f1 \cf2 \cb3 creature_map = percepts[:,:,0]  # 5x5 map with information about creatures and their size\
+food_map = percepts[:,:,1]      # 5x5 map with information about strawberries\
+wall_map = percepts[:,:,2]      # 5x5 map with information about walls\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0 \cf0 \cb1 \
+\
+\
+actionFunction(all weights):\
+	\'93\'94\'94\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 	5*1 numpy array, \
+	sum = 1, \
+	values bounded between (0,1)\
+	\
+	possible actions: [left, up, right, down, eat]\
+	action = np.zeroes((nActions))\
+\
+	Do the action that gives the highest reward, defined by:\
+	Reward for possible actions\
+		w.e*w.a*delta(dist.e),		value bounded between (-4,4) map 0 creatures\
+		w.f*delta(dist.f), 		value bounded between (0,4) map 1 food \
+		w.w*delta(dist.w), 		value bounded between (0,4) map 2 walls\
+		w.c					value bounded between (0,4)	\
+\
+	map locations: \
+		currentPos	= X(2, 2, any)\
+		pos left		= X(1, 2, any)\
+		pos up		= X(2, 1, any)\
+		pos right		= X(3, 2, any)\
+		pos down		= X(2, 3, any)\
+\
+	nets = (array[5*1]):\
+		for possible locations (4 things, indexes [0:3] of rest)\
+			reward for being there, relative to creatures\
+				for no. creatures detected (value in X[dim3] != 0)\
+					netOtherAgent += calc w.e * w.a * dist.e * agentState (1 or -1)\
+				netOtherAgent / no. creatures detected\
+\
+			reward for being there, relative to food\
+				for no. food detected (value in X[2,2,1] != 0)\
+					netFood += calc w.f * dist.f, \
+				netFood / no. food detected\
+\
+			reward for being there, relative to walls\
+				for no. walls detected (value in X[2,2,2] != 0)\
+					netWall += calc w.w * dist.f, \
+				netWalls / no. walls detected\
+						\
+			reward that location = (netOtherAgent+netFood+netWalls)\
+		\
+		remaining where you are (eating):\
+			nets[4] = w.c\
+\
+	action[nets.indexOf(Max value of nets)]  = 1\
+	return action\
+	\'93\'94\'94\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+fitnessFuntion defined as combination of:\cf4 \cb5 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 \cb5 	# creature.alive - boolean, true if creature is alive at the end of the game\
+	# creature.turn - turn that the creature lived to (last turn if creature survived the entire game)\
+	# creature.size - size of the creature\
+	# creature.strawb_eats - how many strawberries the creature ate\
+	# creature.enemy_eats - how much energy creature gained from eating enemies\
+	# creature.squares_visited - how many different squares the creature visited\
+	# creature.bounces - how many times the creature bounced\
+\
+}
