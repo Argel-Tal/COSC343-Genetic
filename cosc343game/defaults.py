@@ -6,7 +6,7 @@ game_params = {
    "player1": "myAgent",
 
    # File implementing the agent playing as player 2 (exclude the .py extension)
-   "player2": "hunterPlayer",
+   "player2": "randomPlayer",
 
    # Speed of visualisation ('slow','normal','fast')
    "visSpeed": 'normal',

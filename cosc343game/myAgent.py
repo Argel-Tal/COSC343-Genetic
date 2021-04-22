@@ -1,5 +1,5 @@
 import numpy as np
-import random and random
+import random as random
 
 playerName = "myAgent"
 nPercepts = 75  #This is the number of percepts
@@ -11,8 +11,8 @@ trainingSchedule = [("random", 5), ("self", 1)]
 
 # distance function
 # arrrayIndex is the 2 part position of a detected thing
-def manhattanDistance(arrayIndex, translatedX, translatedY):
-    distance = (abs(arrayIndex[0] - translatedX) + abs(arrayIndex[1] - translatedY))
+def manhattanDistance(arrayObject, translatedX, translatedY):
+    distance = (abs(arrayObject[0] - translatedX) + abs(arrayObject[1] - translatedY))
     return distance
 
 # This is the class for your creature/agent
@@ -22,16 +22,16 @@ class MyCreature:
         # You should initialise self.chromosome member variable here (whatever you choose it
         # to be - a list/vector/matrix of numbers - and initialise it with some random
         # values
-        self.weightAgent = random.randint(0,100)
-        self.weightAgentAttitude = random.randint(0,100)
-        self.weightFood = random.randint(0,100)
-        self.weightWall = random.randint(0,100)
-        self.weightConsume = random.randint(0,100)
-        self.chromosome = [self.weightAgent, self.weightAgentAttitude, self.weightFood, self.weightWall, weightConsume]
+        self.weightAgent = random.randint(-100, 100)
+        self.weightAgentAttitude = random.randint(-100, 100)
+        self.weightFood = random.randint(-100, 100)
+        self.weightWall = random.randint(-100, 100)
+        self.weightConsume = random.randint(-100, 100)
+        self.chromosome = [self.weightAgent, self.weightAgentAttitude, self.weightFood, self.weightWall, self.weightConsume]
         # .
         # .
         # .
-        pass #This is just a no-operation statement - replace it with your code
+        pass  # This is just a no-operation statement - replace it with your code
 
 
     def AgentFunction(self, percepts):
@@ -59,32 +59,38 @@ class MyCreature:
         # agents can exhibit different behaviour.
 
         nets = np.zeros((nActions))
-        translations = [[-1,0],[0,-1],[+1,0],[0,+1]]
+        translations = [[-1,0],[0,-1],[1,0],[0,1]]
 
         for i in range(nActions-1):
             netOtherAgents = 0
             netFoods = 0
             netWalls = 0
             currentDirection = translations[i]
-            agentsDetected = np.where(percepts[0] != 0) # assuming the tensor is indexable by map mode first
-            for agent in agentsDetected:
-                netOtherAgents += self.weightAgent * self.weightAgentAttitude * (manhattanDistance(agent, currentDirection[0], currentDirection[1]))
 
-            foodsDetected = np.where(percepts[1] != 0) # assuming the tensor is indexable by map mode first
-            for food in foodsDetected:
-                netFoods += self.weightFood * (manhattanDistance(food, currentDirection[0], currentDirection[1]))
+            agentMap = percepts[0]
+            foodMap = percepts[1]
+            wallMap = percepts[2]
 
-            wallsDetected = np.where(percepts[2] != 0) # assuming the tensor is indexable by map mode first
-            for wall in wallsDetected:
-                netWalls += self.weightWall * (manhattanDistance(wall, currentDirection[0], currentDirection[1]))
+            #  agentsDetected = np.where(percepts[0:] != 0) # assuming the tensor is indexable by map mode first
+            for agent, val in np.ndenumerate(agentMap):
+                netOtherAgents += self.weightAgent * self.weightAgentAttitude * val * manhattanDistance(agent, currentDirection[0], currentDirection[1])
 
-            nets[i] = (netOtherAgents + netFoods + netWalls)
+            for food, val in np.ndenumerate(foodMap):
+                netFoods += (self.weightFood * (manhattanDistance(food, currentDirection[0], currentDirection[1])))
+
+            for wall, val in np.ndenumerate(wallMap):
+                netWalls += (self.weightWall * (manhattanDistance(wall, currentDirection[0], currentDirection[1])))
+
+            nets[i] = netOtherAgents + netFoods + netWalls
 
         nets[4] = self.weightConsume
 
         # set the value of 'actions', at the index corresponding to the index of 'nets' with the highest value, to 1
-        actions[nets.indexOf(max(nets))] = 1
+        # index = np.where(nets == max(nets))
+        # actions[index] = 1
+        actions[np.where(nets == max(nets))] = 1
         return actions
+
 
 def newGeneration(old_population):
 
@@ -102,10 +108,9 @@ def newGeneration(old_population):
     # code is to demonstrate how to fetch information from the old_population in order
     # to score fitness of each agent
     for n, creature in enumerate(old_population):
-
         # creature is an instance of MyCreature that you implemented above, therefore you can access any attributes
         # (such as `self.chromosome').  Additionally, the objects has attributes provided by the
-        # game enginne:
+        # game engine:
         #
         # creature.alive - boolean, true if creature is alive at the end of the game
         # creature.turn - turn that the creature lived to (last turn if creature survived the entire game)
@@ -115,13 +120,11 @@ def newGeneration(old_population):
         # creature.squares_visited - how many different squares the creature visited
         # creature.bounces - how many times the creature bounced
 
-        # .
-        # .
-        # .
+        fitnessEval = creature.turn + creature.size + creature.strawb_eats + creature.enemy_eats
 
         # This fitness functions just considers length of survival.  It's probably not a great fitness
         # function - you might want to use information from other stats as well
-        fitness[n] = creature.turn
+        fitness[n] = fitnessEval
 
     # At this point you should sort the agent according to fitness and create new population
     new_population = list()
@@ -143,7 +146,7 @@ def newGeneration(old_population):
         # Add the new agent to the new population
         new_population.append(new_creature)
 
-    # At the end you neet to compute average fitness and return it along with your new population
+    # At the end you need to compute average fitness and return it along with your new population
     avg_fitness = np.mean(fitness)
 
     return (new_population, avg_fitness)
