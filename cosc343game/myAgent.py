@@ -5,14 +5,13 @@ import statistics as stats
 playerName = "myAgent"
 nPercepts = 75              # This is the number of percepts
 nActions = 5                # This is the number of actionss
-proportionRetained = 0.3    # the proportion of agents that survive into the next generation
+proportionRetained = 0.4    # the proportion of agents that survive into the next generation
 fitnessOptionChoice = 2     # Selected fitness function, from list of options
 fitnessScores = list()
 chromoStdevs = list()
-scoreArrays = [fitnessScores, chromoStdevs]
 
 # Train against random for 5 generations, then against self for 1 generations
-trainingSchedule = [("random", 60)]
+trainingSchedule = [("random", 100)]
 # trainingSchedule = [("random", 50), ("self", 1)]
 
 with open("stats.csv", "w") as myfile:
@@ -126,7 +125,7 @@ class MyCreature:
         if percepts[2, 2, 1] == 1:
             nets[4] = ((self.weightConsume**5)/((percepts[0][2][2])+1))  # +1 ensures divide by 0 never happens
         else:
-            nets[4] = -1000000000
+            nets[4] = -1000000000  # prevents the AI from sitting still on spots which are empty
 
         # set the value of 'actions' at the index corresponding to the index of 'nets' with the highest value, to 1
         actions[np.where(nets == max(nets))] = 1
@@ -166,18 +165,16 @@ def newGeneration(old_population):
         # very basic creature evaluation function:
         fitnessEval0 = creature.turn + creature.size + creature.strawb_eats + creature.enemy_eats # baseline eval function
         fitnessEval1 = creature.alive * (creature.size + creature.strawb_eats + creature.enemy_eats) # score > 0 only when still alive, else score = 0
-        fitnessEval2 = creature.turn + creature.size + creature.strawb_eats + creature.enemy_eats + creature.squares_visited # reward exploration
-        fitnessEval3 = creature.alive * (creature.size + creature.strawb_eats + creature.enemy_eats + creature.squares_visited) # reward exploration, given alive
+        fitnessEval2 = creature.turn + creature.strawb_eats + creature.enemy_eats + creature.squares_visited # reward exploration
+        fitnessEval3 = creature.alive * (creature.strawb_eats + creature.enemy_eats + creature.squares_visited) # reward exploration, given alive
         fitnessEval4 = creature.turn * (creature.strawb_eats + creature.enemy_eats) # heavily rewards eating other things
         fitnessEval5 = creature.alive * creature.turn * (creature.strawb_eats + creature.enemy_eats) # heavily rewards eating other things
-        fitnessEval6 = creature.turn * creature.size # reward getting big fast
-        fitnessEval7 = creature.alive * creature.turn * creature.size # reward getting big fast, given alive
+        fitnessEval6 = creature.turn * creature.size + creature.squares_visited# reward getting big fast and exploration
+        fitnessEval7 = creature.alive * creature.turn * creature.size + creature.squares_visited# reward getting big fast and exploration, given alive
         fitnessEval8 = creature.turn * (creature.strawb_eats + creature.enemy_eats) # reward getting big fast, based on eats, doesn't account for size of eats
         fitnessEval9 = creature.alive * creature.turn * (creature.strawb_eats + creature.enemy_eats) # reward getting big fast, based on eats, doesn't account for size of eats
-        fitnessEval10 = creature.turn * creature.size * (creature.strawb_eats + creature.enemy_eats) # reward getting big fast, interaction with eats and size
-        fitnessEval11 = creature.alive * creature.turn * creature.size * (creature.strawb_eats + creature.enemy_eats) # reward getting big fast, interaction with eats and size, given alive
         
-        fitnessFunctionOptions = [fitnessEval0, fitnessEval1, fitnessEval2, fitnessEval3, fitnessEval4, fitnessEval5, fitnessEval6, fitnessEval7, fitnessEval8, fitnessEval9, fitnessEval10, fitnessEval11]
+        fitnessFunctionOptions = [fitnessEval0, fitnessEval1, fitnessEval2, fitnessEval3, fitnessEval4, fitnessEval5, fitnessEval6, fitnessEval7, fitnessEval8, fitnessEval9]
 
         fitness[n] = fitnessFunctionOptions[fitnessOptionChoice]  # change this to reward diff behaviour
 
