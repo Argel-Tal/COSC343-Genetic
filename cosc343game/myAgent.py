@@ -127,6 +127,18 @@ class MyCreature:
         else:
             nets[4] = -1000000000  # prevents the AI from sitting still on spots which are empty
 
+
+        maxArg = max(nets)
+        minArg = min(nets)
+        newMax = +1
+        newMin = -1
+
+        a = (newMax - newMin) / (maxArg - minArg)
+        b = newMax - a * maxArg
+
+        for value in nets:
+            value = a * value + b
+
         # set the value of 'actions' at the index corresponding to the index of 'nets' with the highest value, to 1
         actions[np.where(nets == max(nets))] = 1
         return actions
