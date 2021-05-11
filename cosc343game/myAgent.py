@@ -4,9 +4,9 @@ import statistics as stats
 
 playerName = "myAgent"
 nPercepts = 75              # This is the number of percepts
-nActions = 5                # This is the number of actionss
-proportionRetained = 0.4    # the proportion of agents that survive into the next generation
-fitnessOptionChoice = 6     # Selected fitness function, from list of options
+nActions = 5                # This is the number of actions
+proportionRetained = 0.2    # the proportion of agents that survive into the next generation
+fitnessOptionChoice = 2     # Selected fitness function, from list of options
 fitnessScores = list()
 chromoStdevs = list()
 
@@ -43,7 +43,7 @@ class MyCreature:
         # .
         # .
         # .
-        pass  # This is just a no-operation statement - replace it with your code
+        # pass  # This is just a no-operation statement - replace it with your code
 
 
     def AgentFunction(self, percepts):
@@ -71,12 +71,11 @@ class MyCreature:
         # agents can exhibit different behaviour.
 
         nets = np.zeros((nActions))
-        translations = [[-1,0],[0,-1],[1,0],[0,1]]
+        translations = [[-1,0], [0,-1], [1,0], [0,1]]
         mySize = percepts[0][2][2]
 
         for i in range(nActions-1):
 
-            
             netOtherAgentsSizeAttitude = 0
             netOtherAgentsDistAttitude = 0
             netOtherAgentsAttitude = 0
@@ -183,8 +182,8 @@ def newGeneration(old_population):
         fitnessEval5 = creature.alive * creature.turn * (creature.strawb_eats + creature.enemy_eats) # heavily rewards eating other things
         fitnessEval6 = creature.turn * creature.size + creature.squares_visited# reward getting big fast and exploration
         fitnessEval7 = creature.alive * creature.turn * creature.size + creature.squares_visited# reward getting big fast and exploration, given alive
-        fitnessEval8 = creature.turn * (creature.strawb_eats + creature.enemy_eats) # reward getting big fast, based on eats, doesn't account for size of eats
-        fitnessEval9 = creature.alive * creature.turn * (creature.strawb_eats + creature.enemy_eats) # reward getting big fast, based on eats, doesn't account for size of eats
+        fitnessEval8 = creature.turn * (creature.strawb_eats + creature.enemy_eats) # reward getting big fast, based on eats
+        fitnessEval9 = creature.alive * creature.turn * (creature.strawb_eats + creature.enemy_eats) # reward getting big fast
         
         fitnessFunctionOptions = [fitnessEval0, fitnessEval1, fitnessEval2, fitnessEval3, fitnessEval4, fitnessEval5, fitnessEval6, fitnessEval7, fitnessEval8, fitnessEval9]
 
