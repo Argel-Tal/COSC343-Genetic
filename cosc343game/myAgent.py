@@ -1,17 +1,18 @@
 import numpy as np
 import random as random
 import statistics as stats
+import math as math
 
 playerName = "myAgent"
 nPercepts = 75              # This is the number of percepts
 nActions = 5                # This is the number of actions
 proportionRetained = 0.2    # the proportion of agents that survive into the next generation
-fitnessOptionChoice = 10     # Selected fitness function, from list of options
+fitnessOptionChoice = 11     # Selected fitness function, from list of options
 fitnessScores = list()
 chromoStdevs = list()
 
 # Train against random for 5 generations, then against self for 1 generations
-trainingSchedule = [("random", 100)]
+trainingSchedule = [("random", 60)]
 # trainingSchedule = [("random", 50), ("self", 1)]
 
 with open("stats.csv", "w") as myfile:
@@ -40,7 +41,7 @@ class MyCreature:
         self.weightSizeDif = random.randint(-100, 100)
         self.weightSizeRelativeFood = random.randint(-100, 100)
         self.chromosome = [self.weightAgentSize, self.weightAgentDist, self.weightAgentAttitude, self.weightAgentSizeGivenAttitude, self.weightFood, self.weightWall, self.weightConsume, self.weightSizeDif, self.weightSizeRelativeFood]
-
+        self.missedEats = 0
 
     def AgentFunction(self, percepts):
 
@@ -136,6 +137,10 @@ class MyCreature:
 
         # set the value of 'actions' at the index corresponding to the index of 'nets' with the highest value, to 1
         actions[np.where(nets == max(nets))] = 1
+
+        if(percepts[2, 2, 1] == 1) & (nets[4] != 1):
+            self.missedEats = self.missedEats + 1
+
         return actions
 
 
@@ -172,7 +177,7 @@ def newGeneration(old_population):
         # very basic creature evaluation function:
         fitnessEval0 = creature.turn + creature.size + creature.strawb_eats + creature.enemy_eats  # baseline eval function
         fitnessEval1 = creature.alive * (creature.size + creature.strawb_eats + creature.enemy_eats)  # score > 0 only when still alive, else score = 0
-        # fitness function 2 is my preferred
+        # fitness function 2 is my old preferred
         fitnessEval2 = creature.turn + creature.strawb_eats + creature.enemy_eats + creature.squares_visited  # reward exploration
         fitnessEval3 = creature.alive * (creature.strawb_eats + creature.enemy_eats + creature.squares_visited)  # reward exploration, given alive
         fitnessEval4 = creature.turn * (creature.strawb_eats + creature.enemy_eats)  # heavily rewards eating other things
@@ -182,11 +187,12 @@ def newGeneration(old_population):
         fitnessEval7 = creature.alive * creature.turn * creature.size + creature.squares_visited  # reward getting big fast and exploration, given alive
         fitnessEval8 = creature.turn * (creature.strawb_eats + creature.enemy_eats) + creature.squares_visited - (creature.bounces/creature.squares_visited)  # reward getting big fast, based on eats
         fitnessEval9 = creature.alive * creature.turn * (creature.strawb_eats + creature.enemy_eats + (creature.bounces/creature.squares_visited))  # reward getting big fast, based on eats
-        # testing this fitness function atm
-        fitnessEval10 = fitnessEval2 + (1.5 * creature.alive * fitnessEval2) - creature.bounces  # playing around with disproportionate rewards for surviving creatures
+        # reward surviving players more than dead ones
+        fitnessEval10 = fitnessEval2 + (3.5 * creature.alive * fitnessEval2)
+        # fitness function 11 is my new preferred, added penalisation of bounces
+        fitnessEval11 = fitnessEval10 - creature.missedEats + creature.squares_visited - creature.bounces**2
 
-
-        fitnessFunctionOptions = [fitnessEval0, fitnessEval1, fitnessEval2, fitnessEval3, fitnessEval4, fitnessEval5, fitnessEval6, fitnessEval7, fitnessEval8, fitnessEval9, fitnessEval10]
+        fitnessFunctionOptions = [fitnessEval0, fitnessEval1, fitnessEval2, fitnessEval3, fitnessEval4, fitnessEval5, fitnessEval6, fitnessEval7, fitnessEval8, fitnessEval9, fitnessEval10, fitnessEval11]
 
         fitness[n] = fitnessFunctionOptions[fitnessOptionChoice]  # change this to reward diff behaviour
 

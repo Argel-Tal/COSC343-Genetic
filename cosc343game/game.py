@@ -635,6 +635,8 @@ class Game:
             elif op == 'self':
                 opFile = player.playerFile
 
+
+
             opponentNumber = (player.player + 1) % 2
 
             # Load opponent
