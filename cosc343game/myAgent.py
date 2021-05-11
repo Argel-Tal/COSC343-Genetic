@@ -6,12 +6,12 @@ playerName = "myAgent"
 nPercepts = 75              # This is the number of percepts
 nActions = 5                # This is the number of actionss
 proportionRetained = 0.4    # the proportion of agents that survive into the next generation
-fitnessOptionChoice = 2     # Selected fitness function, from list of options
+fitnessOptionChoice = 6     # Selected fitness function, from list of options
 fitnessScores = list()
 chromoStdevs = list()
 
 # Train against random for 5 generations, then against self for 1 generations
-trainingSchedule = [("random", 100)]
+trainingSchedule = [("random", 40)]
 # trainingSchedule = [("random", 50), ("self", 1)]
 
 with open("stats.csv", "w") as myfile:
@@ -136,8 +136,8 @@ class MyCreature:
         a = (newMax - newMin) / (maxArg - minArg)
         b = newMax - a * maxArg
 
-        for value in nets:
-            value = a * value + b
+        for i in range(len(nets)):
+            nets[i] = a * nets[i] + b
 
         # set the value of 'actions' at the index corresponding to the index of 'nets' with the highest value, to 1
         actions[np.where(nets == max(nets))] = 1
@@ -229,7 +229,7 @@ def newGeneration(old_population):
             new_creature = MyCreature()
             chromoRaw = list((np.array(parent1.chromosome) + np.array(parent2.chromosome))/2) # very basic combination
             for i in range(len(stdevs)):
-                new_creature.chromosome[i] = int(chromoRaw[i] + int(random.randint(-int(stdevs[i]), int(stdevs[i])))) # allows for genetic diversity between children
+                new_creature.chromosome[i] = int(chromoRaw[i] + int(random.randint(-int(stdevs[i]/2), int(stdevs[i]/2)))) # allows for genetic diversity between children
             retainedIndex += 1
 
         if retainedIndex >= len(retainedSplit[0])-1:
