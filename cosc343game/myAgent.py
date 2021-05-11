@@ -11,7 +11,7 @@ fitnessScores = list()
 chromoStdevs = list()
 
 # Train against random for 5 generations, then against self for 1 generations
-trainingSchedule = [("random", 40)]
+trainingSchedule = [("random", 100)]
 # trainingSchedule = [("random", 50), ("self", 1)]
 
 with open("stats.csv", "w") as myfile:
@@ -219,7 +219,7 @@ def newGeneration(old_population):
     retainedIndex = 0
     for n in range(N):
         if n < lowerLim:
-            new_creature = retainedCreatures[n] # elitism
+            new_creature = retainedCreatures[n]  # elitism
         else: 
             # Create new creature
             parent1 = retainedSplit[0][retainedIndex]
