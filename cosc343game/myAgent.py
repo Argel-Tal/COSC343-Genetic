@@ -6,13 +6,15 @@ import math as math
 playerName = "myAgent"
 nPercepts = 75              # This is the number of percepts
 nActions = 5                # This is the number of actions
-proportionRetained = 0.4    # the proportion of agents that survive into the next generation
+proportionRetained = 0.2    # the proportion of agents that survive into the next generation
 fitnessOptionChoice = 12     # Selected fitness function, from list of options
 fitnessScores = list()
 chromoStdevs = list()
+probabilityOfBreakOut = 0.05  # Probability to break out of very low std values
+breakoutThresh = 15
 
 # Train against random for 5 generations, then against self for 1 generations
-trainingSchedule = [("random", 300)]
+trainingSchedule = [("random", 60)]
 # trainingSchedule = [("random", 100), ("hunter", 60)]
 
 with open("stats.csv", "w") as myfile:
@@ -236,7 +238,12 @@ def newGeneration(old_population):
             new_creature = MyCreature()
             chromoRaw = list((np.array(parent1.chromosome) + np.array(parent2.chromosome))/2) # very basic combination
             for i in range(len(stdevs)):
-                new_creature.chromosome[i] = int(chromoRaw[i] + int(random.randint(-int(stdevs[i]/2), int(stdevs[i]/2)))) # allows for genetic diversity between children
+                new_creature.chromosome[i] = int(chromoRaw[i] + int(random.randint(-int(stdevs[i]/2), int(stdevs[i]/2))))  # allows for genetic diversity between children
+                if (stdevs[i]/2) < breakoutThresh:  # allows for break out of std pits
+                    chromoMod = random.randint(-50, 50)
+                    oddsMod = random.random()
+                    if (oddsMod < probabilityOfBreakOut):
+                        new_creature.chromosome[i] = int(chromoRaw[i] + chromoMod)
             retainedIndex += 1
 
         if retainedIndex >= len(retainedSplit[0])-1:
