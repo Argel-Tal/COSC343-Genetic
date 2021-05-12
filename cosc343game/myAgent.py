@@ -111,7 +111,7 @@ class MyCreature:
 
             for food, val in np.ndenumerate(foodMap):
                 netFoods += self.weightFood * (manhattanDistance(food, currentDirection[0], currentDirection[1]))
-                netFoodRelativeSize += self.weightSizeRelativeFood * (self.weightFood * (manhattanDistance(food, currentDirection[0], currentDirection[1])))
+                netFoodRelativeSize += self.weightSizeRelativeFood * ((self.weightFood / mySize) * (manhattanDistance(food, currentDirection[0], currentDirection[1])))
 
             for wall, val in np.ndenumerate(wallMap):
                 netWalls += (self.weightWall * (manhattanDistance(wall, currentDirection[0], currentDirection[1])))
