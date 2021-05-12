@@ -107,7 +107,7 @@ class MyCreature:
                 netOtherAgentsAttitude += (self.weightAgentSize * self.weightAgentAttitude * val) * (self.weightAgentDist * manhattanDistance(agent, currentDirection[0], currentDirection[1])) + ((self.weightAgentSizeGivenAttitude * val))
                 # caring about both, with relative size considered, instead of just raw size
                 netRelativeSizesWithAttitude += (self.weightSizeDif * (mySize - abs(val))) + (self.weightAgentAttitude * attVal) + (self.weightAgentSizeGivenAttitude * (mySize - abs(val)) * attVal)
-                netrelativeSizesDistanceAttitude += (self.weightAgentSize * (mySize - abs(val))) * (self.weightAgentDist * manhattanDistance(agent, currentDirection[0], currentDirection[1])) * (self.weightAgentAttitude * attVal) + (self.weightAgentSizeGivenAttitude * (mySize - abs(val)) * attVal)
+                netrelativeSizesDistanceAttitude += (self.weightSizeDif * (mySize - abs(val))) * (self.weightAgentDist * manhattanDistance(agent, currentDirection[0], currentDirection[1])) * (self.weightAgentAttitude * attVal) + (self.weightAgentSizeGivenAttitude * (mySize - abs(val)) * attVal)
 
             for food, val in np.ndenumerate(foodMap):
                 netFoods += self.weightFood * (manhattanDistance(food, currentDirection[0], currentDirection[1]))
