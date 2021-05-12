@@ -6,14 +6,14 @@ import math as math
 playerName = "myAgent"
 nPercepts = 75              # This is the number of percepts
 nActions = 5                # This is the number of actions
-proportionRetained = 0.2    # the proportion of agents that survive into the next generation
-fitnessOptionChoice = 11     # Selected fitness function, from list of options
+proportionRetained = 0.4    # the proportion of agents that survive into the next generation
+fitnessOptionChoice = 12     # Selected fitness function, from list of options
 fitnessScores = list()
 chromoStdevs = list()
 
 # Train against random for 5 generations, then against self for 1 generations
-trainingSchedule = [("random", 60)]
-# trainingSchedule = [("random", 50), ("self", 1)]
+trainingSchedule = [("random", 300)]
+# trainingSchedule = [("random", 100), ("hunter", 60)]
 
 with open("stats.csv", "w") as myfile:
     myfile.write('')
@@ -191,8 +191,9 @@ def newGeneration(old_population):
         fitnessEval10 = fitnessEval2 + (3.5 * creature.alive * fitnessEval2)
         # fitness function 11 is my new preferred, added penalisation of bounces
         fitnessEval11 = fitnessEval10 - creature.missedEats + creature.squares_visited - creature.bounces**2
+        fitnessEval12 = fitnessEval2 - (creature.bounces/creature.squares_visited)
 
-        fitnessFunctionOptions = [fitnessEval0, fitnessEval1, fitnessEval2, fitnessEval3, fitnessEval4, fitnessEval5, fitnessEval6, fitnessEval7, fitnessEval8, fitnessEval9, fitnessEval10, fitnessEval11]
+        fitnessFunctionOptions = [fitnessEval0, fitnessEval1, fitnessEval2, fitnessEval3, fitnessEval4, fitnessEval5, fitnessEval6, fitnessEval7, fitnessEval8, fitnessEval9, fitnessEval10, fitnessEval11, fitnessEval12]
 
         fitness[n] = fitnessFunctionOptions[fitnessOptionChoice]  # change this to reward diff behaviour
 
