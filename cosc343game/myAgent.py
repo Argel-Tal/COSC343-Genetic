@@ -209,8 +209,8 @@ def newGeneration(old_population):
 
     new_population = list()
     lowerLim = int((N*proportionRetained))
-    retainedCreatures = old_populationSorted[0:lowerLim]
-    retainedSplit = np.array_split(np.array(retainedCreatures), 2)
+    retainedCreatures = old_populationSorted[0:lowerLim*2]  # allows for agents who score within the proportionRetained * 2 to have children, despite not surviving themselves
+    retainedSplit = np.array_split(np.array(retainedCreatures), 2)  # could make this more dynamic and allow for an apriori variable of how many parents are used per creature
 
     def column(matrix, i):
         return [row[i] for row in matrix]
@@ -229,9 +229,9 @@ def newGeneration(old_population):
     retainedIndex = 0
     for n in range(N):
         if n < lowerLim:
-            new_creature = retainedCreatures[n]  # elitism
+            new_creature = retainedCreatures[n]  # elitism, limit is still using lowerLim, but retained creatures is now larger than lowerLim
         else: 
-            # Create new creature
+            # Create new creature, could make this more dynamic and allow for an apriori variable of how many parents are used per creature
             parent1 = retainedSplit[0][retainedIndex]
             parent2 = retainedSplit[1][retainedIndex]
 
