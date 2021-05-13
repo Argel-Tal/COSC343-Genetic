@@ -6,20 +6,23 @@ import statistics as stats
 playerName = "myAgent"
 nPercepts = 75              # This is the number of percepts
 nActions = 5                # This is the number of actions
-proportionRetained = 0.2    # the proportion of agents that survive into the next generation
-fitnessOptionChoice = 11     # Selected fitness function, from list of options
+proportionRetained = 0.15    # the proportion of agents that survive into the next generation
+fitnessOptionChoice = 3     # Selected fitness function, from list of options
 fitnessScores = list()
 chromoStdevs = list()
-probabilityOfBreakOut = 0.02  # Probability to break out of very low std values
+probabilityOfBreakOut = 0.015  # Probability to break out of very low std values
 breakoutThresh = 12
 print("using fitness function: "+str(fitnessOptionChoice))
 
 # Train against random for 5 generations, then against self for 1 generations
 trainingSchedule = [("random", 200)]
-# trainingSchedule = [("random", 100), ("hunter", 60)]
+# trainingSchedule = [("random", 200), ("hunter", 60)]
 
-with open("stats.csv", "w") as myfile:
+with open("stds.csv", "w") as myfile:
     myfile.write('')
+
+with open("means.csv", "w") as myfile2:
+    myfile2.write('')
 
 # distance function
 # arrrayIndex is the 2 part position of a detected thing
@@ -182,19 +185,20 @@ def newGeneration(old_population):
         fitnessEval1 = creature.alive * (creature.size + creature.strawb_eats + creature.enemy_eats)  # score > 0 only when still alive, else score = 0
         # fitness function 2 is my old preferred
         fitnessEval2 = creature.turn + creature.strawb_eats + creature.enemy_eats + creature.squares_visited  # reward exploration
-        fitnessEval3 = creature.alive * (creature.strawb_eats + creature.enemy_eats + creature.squares_visited)  # reward exploration, given alive
+        fitnessEval3 = creature.turn * creature.size**2 + creature.squares_visited - (creature.bounces/creature.squares_visited)
+
         fitnessEval4 = creature.turn * (creature.strawb_eats + creature.enemy_eats)  # heavily rewards eating other things
         fitnessEval5 = creature.alive * creature.turn * (creature.strawb_eats + creature.enemy_eats)  # heavily rewards eating other things
         # I don't like fitness function 6
         fitnessEval6 = creature.turn * creature.size**2 + creature.squares_visited + creature.enemy_eats # reward getting big fast and exploration
-        fitnessEval7 = creature.alive * creature.turn * creature.size + creature.squares_visited  # reward getting big fast and exploration, given alive
         fitnessEval8 = creature.turn * (creature.strawb_eats + creature.enemy_eats) + creature.squares_visited - (creature.bounces/creature.squares_visited)  # reward getting big fast, based on eats
         fitnessEval9 = creature.alive * creature.turn * (creature.strawb_eats + creature.enemy_eats + (creature.bounces/creature.squares_visited))  # reward getting big fast, based on eats
         # modified versions of fitness functions 2:
-        # reward surviving players more than dead ones
-        fitnessEval10 = fitnessEval2 + (3.5 * creature.alive * fitnessEval2)
-        fitnessEval11 = fitnessEval10 - creature.missedEats + creature.squares_visited - creature.bounces**2 + creature.alive
-        fitnessEval12 = fitnessEval2 - (creature.bounces/creature.squares_visited) + creature.alive
+        fitnessEval10 = fitnessEval2 + (3.5 * creature.alive * fitnessEval2)  # reward surviving players more than dead ones
+        fitnessEval11 = fitnessEval10 - creature.missedEats + creature.squares_visited - creature.bounces**2
+        fitnessEval12 = fitnessEval2 - (creature.bounces/creature.squares_visited) - creature.missedEats
+        fitnessEval7 = fitnessEval2 + creature.size**2 - (creature.bounces/creature.squares_visited)
+
 
         fitnessFunctionOptions = [fitnessEval0, fitnessEval1, fitnessEval2, fitnessEval3, fitnessEval4, fitnessEval5, fitnessEval6, fitnessEval7, fitnessEval8, fitnessEval9, fitnessEval10, fitnessEval11, fitnessEval12]
 
@@ -218,8 +222,10 @@ def newGeneration(old_population):
 
     # get standard deviation of creature genes
     stdevs = list()
+    means = list()
     for i in range(len(genes[0])):
         geneVals = (column(genes, i))
+        means.append(stats.mean(geneVals))
         stdevs.append(stats.pstdev(geneVals))
 
     # Here you should modify the new_creature's chromosome by selecting two parents (based on their
@@ -237,7 +243,13 @@ def newGeneration(old_population):
             parent2 = retainedSplit[1][retainedIndex]
 
             new_creature = MyCreature()
-            chromoRaw = list((np.array(parent1.chromosome) + np.array(parent2.chromosome))/2) # very basic combination
+            parentPos = random.randrange(0, len(parent1.chromosome)-1)
+            parent1Chromo = np.array(parent1.chromosome)[0:parentPos]
+            parent2Chromo = np.array(parent2.chromosome)[parentPos:]
+
+            chromoRaw = list(parent1Chromo) + list(parent2Chromo)  # takes the part of parent1 before the split point, and the part of parent2 that comes after split point
+
+            # chromoRaw = list((np.array(parent1.chromosome) + np.array(parent2.chromosome))/2) # very basic combination
             for i in range(len(stdevs)):
                 new_creature.chromosome[i] = int(chromoRaw[i] + int(random.randint(-int(stdevs[i]/2), int(stdevs[i]/2))))  # allows for genetic diversity between children
                 if (stdevs[i]/2) < breakoutThresh:  # allows for break out of std pits
@@ -257,11 +269,19 @@ def newGeneration(old_population):
     avg_fitness = np.mean(fitness)
 
 
-    with open("stats.csv", "a") as myfile:
+    with open("stds.csv", "a") as myfile:
         myfile.write(str(avg_fitness))
         myfile.write(',')
         myfile.write(str(stdevs)[1:-1])
         myfile.write('\n')
     myfile.close()
+
+    with open("means.csv", "a") as myfile2:
+        myfile2.write(str(avg_fitness))
+        myfile2.write(',')
+        myfile2.write(str(means)[1:-1])
+        myfile2.write('\n')
+    myfile2.close()
+
 
     return (new_population, avg_fitness)
