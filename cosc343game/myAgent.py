@@ -2,16 +2,16 @@ import numpy as np
 import random as random
 import statistics as stats
 
-
 playerName = "myAgent"
 nPercepts = 75              # This is the number of percepts
 nActions = 5                # This is the number of actions
 proportionRetained = 0.15    # the proportion of agents that survive into the next generation
-fitnessOptionChoice = 3     # Selected fitness function, from list of options
+fitnessOptionChoice = 7     # Selected fitness function, from list of options
 fitnessScores = list()
 chromoStdevs = list()
 probabilityOfBreakOut = 0.015  # Probability to break out of very low std values
 breakoutThresh = 12
+mutationRate = 0.05
 print("using fitness function: "+str(fitnessOptionChoice))
 
 # Train against random for 5 generations, then against self for 1 generations
@@ -247,9 +247,9 @@ def newGeneration(old_population):
             parent1Chromo = np.array(parent1.chromosome)[0:parentPos]
             parent2Chromo = np.array(parent2.chromosome)[parentPos:]
 
+            # standard deviation based mutation mode
             chromoRaw = list(parent1Chromo) + list(parent2Chromo)  # takes the part of parent1 before the split point, and the part of parent2 that comes after split point
 
-            # chromoRaw = list((np.array(parent1.chromosome) + np.array(parent2.chromosome))/2) # very basic combination
             for i in range(len(stdevs)):
                 new_creature.chromosome[i] = int(chromoRaw[i] + int(random.randint(-int(stdevs[i]/2), int(stdevs[i]/2))))  # allows for genetic diversity between children
                 if (stdevs[i]/2) < breakoutThresh:  # allows for break out of std pits
@@ -259,6 +259,19 @@ def newGeneration(old_population):
                         new_creature.chromosome[i] = int(chromoRaw[i] + chromoMod)
             retainedIndex += 1
 
+            '''
+            
+            # generic random value based mutation mode
+            chromoRaw = list(parent1Chromo) + list(parent2Chromo)  # takes the part of parent1 before the split point, and the part of parent2 that comes after split point
+
+            for i in range(len(stdevs)):
+                mutation = 0
+                oddsMutation = random.random()
+                if oddsMutation < mutationRate:
+                    mutation = random.randint(-100, 100)
+                new_creature.chromosome[i] = int(chromoRaw[i] + mutation)
+            retainedIndex += 1
+            '''
         if retainedIndex >= len(retainedSplit[0])-1:
             retainedIndex = 0
 
