@@ -122,7 +122,7 @@ class MyCreature:
             for wall, val in np.ndenumerate(wallMap):
                 netWalls += (self.weightWall * (manhattanDistance(wall, currentDirection[0], currentDirection[1])))
 
-            nets[i] = netOtherAgentsSizeAttitude + netOtherAgentsDistAttitude + netOtherAgentsAttitude + netRelativeSizesWithAttitude + netrelativeSizesDistanceAttitude + netFoods + netFoodRelativeSize + netWalls
+            nets[i] = netOtherAgentsDistAttitude + netrelativeSizesDistanceAttitude + netFoods + netFoodRelativeSize + netWalls
 
         if percepts[2, 2, 1] == 1:
             nets[4] = ((self.weightConsume**5)/((percepts[0][2][2])+1))  # +1 ensures divide by 0 never happens
@@ -254,11 +254,11 @@ def newGeneration(old_population):
             chromoRaw = list(parent1Chromo) + list(parent2Chromo)  # takes the part of parent1 before the split point, and the part of parent2 that comes after split point
 
             for i in range(len(stdevs)):
-                oddsMutation = creature.mutationRate
+                oddsMutation = random.random()
                 mutation = int(random.randint(-int(stdevs[i]/2), int(stdevs[i]/2)))
                 #  break out of local minima
                 if ((stdevs[i]/2) < breakoutThresh) & (oddsMutation < probabilityOfBreakOut):
-                    mutation = random.randint(-50, 50)
+                    mutation = random.randint(-int(creature.mutationRate), int(creature.mutationRate))
                 new_creature.chromosome[i] = int(chromoRaw[i] + mutation)  # allows for genetic diversity between children
             retainedIndex += 1
 
@@ -270,8 +270,8 @@ def newGeneration(old_population):
             for i in range(len(stdevs)):
                 mutation = 0
                 oddsMutation = random.random()
-                if oddsMutation < parent1.mutationRate:
-                    mutation = random.randint(-100, 100)
+                if oddsMutation < probabilityOfBreakOut:
+                    mutation = random.randint(-creature.mutationRate, creature.mutationRate)
                 new_creature.chromosome[i] = int(chromoRaw[i] + mutation)
             retainedIndex += 1
 
