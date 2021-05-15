@@ -45,7 +45,7 @@ class MyCreature:
         self.weightConsume = random.randint(-100, 100)
         self.weightSizeDif = random.randint(-100, 100)
         self.weightSizeRelativeFood = random.randint(-100, 100)
-        self.mutationRate = random.random()
+        self.mutationRate = random.randint(-100, 100)
         self.chromosome = [self.weightAgentSize, self.weightAgentDist, self.weightAgentAttitude, self.weightAgentSizeGivenAttitude, self.weightFood, self.weightWall, self.weightConsume, self.weightSizeDif, self.weightSizeRelativeFood, self.mutationRate]
         self.missedEats = 0
 
@@ -258,7 +258,7 @@ def newGeneration(old_population):
                 mutation = int(random.randint(-int(stdevs[i]/2), int(stdevs[i]/2)))
                 #  break out of local minima
                 if ((stdevs[i]/2) < breakoutThresh) & (oddsMutation < probabilityOfBreakOut):
-                    mutation = random.randint(-int(creature.mutationRate), int(creature.mutationRate))
+                    mutation = random.randint(-int(parent1.mutationRate), int(parent1.mutationRate))
                 new_creature.chromosome[i] = int(chromoRaw[i] + mutation)  # allows for genetic diversity between children
             retainedIndex += 1
 
@@ -271,7 +271,7 @@ def newGeneration(old_population):
                 mutation = 0
                 oddsMutation = random.random()
                 if oddsMutation < probabilityOfBreakOut:
-                    mutation = random.randint(-creature.mutationRate, creature.mutationRate)
+                    mutation = random.randint(-100, 100)
                 new_creature.chromosome[i] = int(chromoRaw[i] + mutation)
             retainedIndex += 1
 
