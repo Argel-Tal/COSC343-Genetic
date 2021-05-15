@@ -635,8 +635,6 @@ class Game:
             elif op == 'self':
                 opFile = player.playerFile
 
-
-
             opponentNumber = (player.player + 1) % 2
 
             # Load opponent
@@ -785,8 +783,8 @@ class Game:
                         percepts = np.zeros((perceptBlock,perceptBlock,3))
 
                         # Add nearby agents to percepts
-                        for i in range(-pBHalf,pBHalf):
-                            for j in range(-pBHalf,pBHalf):
+                        for i in range(-pBHalf,pBHalf+1):
+                            for j in range(-pBHalf,pBHalf+1):
                                 x = (position[0] + i)%self.gridSize
                                 y = (position[1] + j)%self.gridSize
 
