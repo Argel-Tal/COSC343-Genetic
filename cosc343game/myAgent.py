@@ -254,7 +254,7 @@ def newGeneration(old_population):
             chromoRaw = list(parent1Chromo) + list(parent2Chromo)  # takes the part of parent1 before the split point, and the part of parent2 that comes after split point
 
             for i in range(len(stdevs)):
-                oddsMutation = random.random()
+                oddsMutation = creature.mutationRate
                 mutation = int(random.randint(-int(stdevs[i]/2), int(stdevs[i]/2)))
                 #  break out of local minima
                 if ((stdevs[i]/2) < breakoutThresh) & (oddsMutation < probabilityOfBreakOut):
@@ -270,7 +270,7 @@ def newGeneration(old_population):
             for i in range(len(stdevs)):
                 mutation = 0
                 oddsMutation = random.random()
-                if oddsMutation < creature.mutationRate:
+                if oddsMutation < parent1.mutationRate:
                     mutation = random.randint(-100, 100)
                 new_creature.chromosome[i] = int(chromoRaw[i] + mutation)
             retainedIndex += 1
