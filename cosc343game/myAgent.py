@@ -14,7 +14,8 @@ breakoutThresh = 12
 print("using fitness function: "+str(fitnessOptionChoice))
 
 # Train against random for 5 generations, then against self for 1 generations
-trainingSchedule = [("random", 200)]
+# trainingSchedule = [("random", 200)]
+trainingSchedule = [("hunter", 60)]
 # trainingSchedule = [("random", 200), ("hunter", 60)]
 
 with open("stds.csv", "w") as myfile:
