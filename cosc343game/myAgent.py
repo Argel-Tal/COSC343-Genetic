@@ -11,7 +11,6 @@ fitnessScores = list()
 chromoStdevs = list()
 probabilityOfBreakOut = 0.015  # Probability to break out of very low std values
 breakoutThresh = 12
-mutationRate = 0.05
 print("using fitness function: "+str(fitnessOptionChoice))
 
 # Train against random for 5 generations, then against self for 1 generations
@@ -46,7 +45,8 @@ class MyCreature:
         self.weightConsume = random.randint(-100, 100)
         self.weightSizeDif = random.randint(-100, 100)
         self.weightSizeRelativeFood = random.randint(-100, 100)
-        self.chromosome = [self.weightAgentSize, self.weightAgentDist, self.weightAgentAttitude, self.weightAgentSizeGivenAttitude, self.weightFood, self.weightWall, self.weightConsume, self.weightSizeDif, self.weightSizeRelativeFood]
+        self.mutationRate = random.random()
+        self.chromosome = [self.weightAgentSize, self.weightAgentDist, self.weightAgentAttitude, self.weightAgentSizeGivenAttitude, self.weightFood, self.weightWall, self.weightConsume, self.weightSizeDif, self.weightSizeRelativeFood, self.mutationRate]
         self.missedEats = 0
 
     def AgentFunction(self, percepts):
@@ -161,7 +161,7 @@ def newGeneration(old_population):
 
     # Fitness for all agents
     fitness = np.zeros((N))
-    genes = np.zeros(((N, 9)))
+    genes = np.zeros(((N, 10)))
 
 
     # This loop iterates over your agents in the old population - the purpose of this boiler plate
@@ -247,16 +247,19 @@ def newGeneration(old_population):
             parent1Chromo = np.array(parent1.chromosome)[0:parentPos]
             parent2Chromo = np.array(parent2.chromosome)[parentPos:]
 
+            # toggle block comments go here:
+
+             
             # standard deviation based mutation mode
             chromoRaw = list(parent1Chromo) + list(parent2Chromo)  # takes the part of parent1 before the split point, and the part of parent2 that comes after split point
 
             for i in range(len(stdevs)):
-                new_creature.chromosome[i] = int(chromoRaw[i] + int(random.randint(-int(stdevs[i]/2), int(stdevs[i]/2))))  # allows for genetic diversity between children
-                if (stdevs[i]/2) < breakoutThresh:  # allows for break out of std pits
-                    chromoMod = random.randint(-50, 50)
-                    oddsMod = random.random()
-                    if (oddsMod < probabilityOfBreakOut):
-                        new_creature.chromosome[i] = int(chromoRaw[i] + chromoMod)
+                oddsMutation = random.random()
+                mutation = int(random.randint(-int(stdevs[i]/2), int(stdevs[i]/2)))
+                #  break out of local minima
+                if ((stdevs[i]/2) < breakoutThresh) & (oddsMutation < probabilityOfBreakOut):
+                    mutation = random.randint(-50, 50)
+                new_creature.chromosome[i] = int(chromoRaw[i] + mutation)  # allows for genetic diversity between children
             retainedIndex += 1
 
             '''
@@ -267,11 +270,14 @@ def newGeneration(old_population):
             for i in range(len(stdevs)):
                 mutation = 0
                 oddsMutation = random.random()
-                if oddsMutation < mutationRate:
+                if oddsMutation < creature.mutationRate:
                     mutation = random.randint(-100, 100)
                 new_creature.chromosome[i] = int(chromoRaw[i] + mutation)
             retainedIndex += 1
+
+            #  toggle comments go here:
             '''
+
         if retainedIndex >= len(retainedSplit[0])-1:
             retainedIndex = 0
 
