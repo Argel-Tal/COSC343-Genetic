@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4affa9f5-8868-415e-9118-571120fa3d44" name="Default Changelist" comment="backing up ittertive changes" />
+    <list default="true" id="4affa9f5-8868-415e-9118-571120fa3d44" name="Default Changelist" comment="Pretty happy with this as is, think oddities have been taken out">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cosc343game/means.csv" beforeDir="false" afterPath="$PROJECT_DIR$/cosc343game/means.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cosc343game/myAgent.py" beforeDir="false" afterPath="$PROJECT_DIR$/cosc343game/myAgent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cosc343game/myAgent.tar.gz" beforeDir="false" afterPath="$PROJECT_DIR$/cosc343game/myAgent.tar.gz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cosc343game/myAgent.tar.gz_" beforeDir="false" afterPath="$PROJECT_DIR$/cosc343game/myAgent.tar.gz_" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cosc343game/stds.csv" beforeDir="false" afterPath="$PROJECT_DIR$/cosc343game/stds.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cosc343report/COSC343 Genetic AI - Report.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/cosc343report/COSC343 Genetic AI - Report.ipynb" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,7 +42,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.game">
     <configuration name="game" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -57,9 +65,32 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="vis_pygame" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="COSC343-Genetic" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/cosc343game" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cosc343game/vis_pygame.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.game" />
+        <item itemvalue="Python.vis_pygame" />
       </list>
     </recent_temporary>
   </component>
@@ -80,7 +111,10 @@
       <workItem from="1620948899394" duration="1611000" />
       <workItem from="1621036138149" duration="16000" />
       <workItem from="1621036162192" duration="3779000" />
-      <workItem from="1621042397302" duration="1938000" />
+      <workItem from="1621042397302" duration="7990000" />
+      <workItem from="1621074471627" duration="22000" />
+      <workItem from="1621074495215" duration="72000" />
+      <workItem from="1621074585418" duration="4818000" />
     </task>
     <task id="LOCAL-00001" summary="backing up ittertive changes">
       <created>1621044104247</created>
@@ -89,7 +123,35 @@
       <option name="project" value="LOCAL" />
       <updated>1621044104247</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Happy with how this changes it's own mutation rate">
+      <created>1621044374752</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1621044374752</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Seems to win a bunch, but mutation rate hits fixed value real quick">
+      <created>1621047105794</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1621047105794</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Seems to win a bunch, but mutation rate hits fixed value real quick">
+      <created>1621048997340</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1621048997340</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Pretty happy with this as is, think oddities have been taken out">
+      <created>1621050650710</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1621050650710</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -109,9 +171,13 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="backing up ittertive changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="backing up ittertive changes" />
+    <MESSAGE value="Happy with how this changes it's own mutation rate" />
+    <MESSAGE value="Seems to win a bunch, but mutation rate hits fixed value real quick" />
+    <MESSAGE value="Pretty happy with this as is, think oddities have been taken out" />
+    <option name="LAST_COMMIT_MESSAGE" value="Pretty happy with this as is, think oddities have been taken out" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/COSC343_Genetic$game.coverage" NAME="game Coverage Results" MODIFIED="1621043394526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cosc343game" />
+    <SUITE FILE_PATH="coverage/COSC343_Genetic$game.coverage" NAME="game Coverage Results" MODIFIED="1621079739502" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cosc343game" />
+    <SUITE FILE_PATH="coverage/COSC343_Genetic$vis_pygame.coverage" NAME="vis_pygame Coverage Results" MODIFIED="1621074615844" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cosc343game" />
   </component>
 </project>
