@@ -1,0 +1,119 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University Assignment Title Page 
+% LaTeX Template
+% Version 1.0 (27/12/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% WikiBooks (http://en.wikibooks.org/wiki/LaTeX/Title_Creation)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% 
+% Modified for COSC480/490 by:
+% Lech Szymanski (8/3/18)
+
+\ProvidesPackage{cosc343style}[COSC343 report style file]
+
+\usepackage[a4paper,bindingoffset=0.2in,%
+            left=1in,right=1in,top=1in,bottom=1in,%
+            footskip=.25in]{geometry}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{enumitem}
+%\usepackage{fancyhdr}
+\usepackage{hyperref}
+%For OT-style tableaux
+\usepackage{ot-tableau}
+ 
+\let\@papercode\@empty
+\let\@supervisors\@empty
+\let\@reportdate\@empty
+\let\@studentid\@empty
+\let\@shorttitle\@empty
+\newcommand{\papercode}[1]{\gdef\@papercode{#1}}
+\newcommand{\supervisors}[1]{\gdef\@supervisors{#1}}
+\newcommand{\reportdate}[1]{\gdef\@reportdate{#1}}
+\newcommand{\studentid}[1]{\gdef\@studentid{#1}}
+\newcommand{\shorttitle}[1]{\gdef\@shorttitle{#1}}
+ 
+ 
+%\pagestyle{fancy}
+%\fancyhf{}
+%\rhead{\@author{} (\@studentid{})}
+%\lhead{\@shorttitle}
+%\rfoot{Page \thepage}
+
+
+% declare draft option, which enables todo notes
+\newif\if@draftmode\@draftmodefalse
+\DeclareOption{draft}{
+  \@draftmodetrue
+}
+
+\ProcessOptions\relax
+
+\if@draftmode
+  \RequirePackage{todonotes}
+\else
+  \RequirePackage[disable]{todonotes}
+\fi
+
+
+% create title
+%\providecommand{\maketitle}{}
+\usepackage{graphicx}
+
+\usepackage{verbatim}
+
+%use for special OT tableaux symbols like bomb and sad face. must be loaded early on because it doesn't play well with some other packages
+%\usepackage{fourier-orns}
+
+%\usepackage{libertine} %A font that actually contains many IPA symbols. This is the font you see in the preview to the right.
+
+%For OT-style tableaux
+\usepackage{ot-tableau}
+
+%paragraph formatting
+\usepackage[parfill]{parskip}
+\setlength{\parskip}{5pt} %plus 1 minus 1}
+\setlength{\parindent}{30pt}
+\usepackage{titlesec}
+
+\newif\ifthanks@
+\thanks@false
+\def\thanksfile#1{\gdef\@thanksfile{#1}\thanks@true}
+
+\def\supervisor#1{\gdef\@supervisor{#1}}
+\def\reportyear#1{\gdef\@reportyear{#1}}
+\def\abstractfile#1{\gdef\@abstractfile{#1}}
+\def\studentid#1{\gdef\@studentid{#1}}
+\def\@title{}\def\@author{}
+\def\@supervisor{}
+\reportyear{2020}
+\abstractfile{null}
+
+%Changes the \maketitle command to be smaller and take up less space on a page. 
+\makeatletter         
+\def\@maketitle{   % custom maketitle 
+\noindent {\Large \bfseries \color{black} COSC343: \@title}  \\ \hrule \noindent \@author{}  (\@studentid) \\ \@date  
+}
+
+
+% URL/ref/citation colours
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor = blue,
+    filecolor=magenta,      
+    urlcolor=blue
+}
+
+\setlength\parindent{0pt}
+
+\endinput
