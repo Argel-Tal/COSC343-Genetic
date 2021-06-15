@@ -22,3 +22,14 @@ Reproduction Schema for creating new creatures from exisitng population
 
 
 ## Assignment has now been handed in, we're freeeeeeee
+
+### Post-Op review:
+Looks like there's a negative value multiplier somewhere in the agent perception block (percept map, level 0), causing my agents move towards big enemies when they should move away from them. 
+
+The model is possibly not applying the "large enemy that way" penalty correctly and thus not subtracting from that direction's score OR the agents are viewing enemies as friendlies and moving towards them, seeing them as a safe location. Would have to do some decent debugging and testing. Annoyingly I don't have the lecturer's testing sim code, so that'd be a re-engineering mission to even create a testing environ 😞
+
+![selfLoathingAI](https://user-images.githubusercontent.com/80669114/122036756-069e8d80-ce28-11eb-9d3a-39e11d53402e.png)
+
+Might come back to this over the break, but don't expect a update anytime soon.
+
+
